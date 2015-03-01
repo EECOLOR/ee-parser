@@ -1,7 +1,11 @@
 package ee
 
 sealed trait Definition {
-  override def toString = getClass.getSimpleName.stripSuffix("$")
+  override def toString = getClass.getName
+    .stripSuffix("$")
+    .replaceAll("ee.", "")
+    .replaceAll("Global\\$", "")
+    .replaceAll("\\$", ".")
 }
 
 object Definition {
@@ -9,10 +13,10 @@ object Definition {
     def ~ (tail:Definition)  = new ~(definition, tail)
     def | (other:Definition) = new |(definition, other)
 
-    def *       = AttributedDescription(definition, zeroOrMore = true)
-    def unary_! = AttributedDescription(definition, not = true)
-    def ?       = AttributedDescription(definition, zeroOrOne = true)
-    def +       = AttributedDescription(definition, oneOrMore = true)
+    def *       = AttributedDefinition(definition, zeroOrMore = true)
+    def unary_! = AttributedDefinition(definition, not = true)
+    def ?       = AttributedDefinition(definition, zeroOrOne = true)
+    def +       = AttributedDefinition(definition, oneOrMore = true)
   }
 }
 
@@ -21,14 +25,13 @@ trait Rule extends Definition {
     addRule(this, definition)
 }
 
-abstract class Description(definitions: => Definition) extends Definition { lazy val contents = definitions }
 sealed abstract class ToString(val name: String)       extends Definition { override def toString = name }
 sealed abstract class Unspecified(name:String)         extends ToString(name)
 
 case class ~(description:Definition, rest:Definition)  extends ToString(s"($description ~ $rest)")
 case class |(description:Definition, other:Definition) extends ToString(s"($description | $other)")
 
-case class AttributedDescription(
+case class AttributedDefinition(
   description: Definition,
 
   zeroOrMore : Boolean = false,

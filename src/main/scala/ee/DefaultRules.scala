@@ -91,7 +91,7 @@ object DefaultRules extends Rules(Global) {
         For            := `for` ~ `{` ~ Generator ~ (Generator | Member | Guard).* ~ `}` ~ `yield`.? ~ Expression
         Generator      := Id ~ `<-` ~ Expression ~ Guard.?
         Guard          := `if` ~ Expression
-        TickEmbedded   := `'''` ~ Id ~ !`'''` ~ `'''`
+        TickEmbedded   := `'''` ~ Id ~ !`'''` ~ `'''` // '''
 
       Lambda           := ((Value.Parameters | Value.Parameter) ~ `=>`).+ ~ Expression
 
@@ -109,7 +109,7 @@ object DefaultRules extends Rules(Global) {
           Product             := `(` ~ Expression ~ (`,` ~ Expression).* ~ `)`
           Block               := `{` ~ BlockStatements ~ `}`
         Primitive             := Literal | StringInterpolation | Value.Reference | `_`
-          StringInterpolation := Value.Reference ~ `"` ~ (Interpolation | !`"`).+ ~ `"`
+          StringInterpolation := Value.Reference ~ `"` ~ (Interpolation | !`"`).+ ~ `"` // "
           Interpolation       := InterpolationEscape | `$` ~ Id | `$` ~ Block
           InterpolationEscape := `$` ~ `$`
   }
@@ -121,7 +121,7 @@ object DefaultRules extends Rules(Global) {
       Infix                := Simple ~ (Value.Reference ~ Simple).+
       Simple               := Underscore | StringInterpolation | Literal | Reference | Product | Id | Sequence
        Underscore          := `_` ~ Type.Assignment.?
-       StringInterpolation := Value.Reference ~ `"` ~ (Interpolation ~ !`"`) ~ `"`
+       StringInterpolation := Value.Reference ~ `"` ~ (Interpolation ~ !`"`) ~ `"` // "
        Interpolation       := Expression.InterpolationEscape | `$` ~ Id | `$` ~ `{` ~ Pattern ~ `}`
        Reference           := Value.Reference ~ Product
        Product             := `(` ~ Pattern ~ (`,` ~ Pattern).* ~`)`
