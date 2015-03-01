@@ -1,24 +1,24 @@
 package ee
 
 sealed trait Definition {
-  def *       = AttributedDescription(this, zeroOrMore = true)
-  def unary_! = AttributedDescription(this, not = true)
-  def ?       = AttributedDescription(this, zeroOrOne = true)
-  def +       = AttributedDescription(this, oneOrMore = true)
-
   override def toString = getClass.getSimpleName.stripSuffix("$")
 }
 
-trait Rule extends Definition {
-  def := (definition:Definition)(implicit addRule: (this.type, Definition) => Unit):Unit =
-    addRule(this, definition)
-}
-
 object Definition {
-  implicit class DecorateDefinition(definition:Definition) {
+  implicit class Operations(definition:Definition) {
     def ~ (tail:Definition)  = new ~(definition, tail)
     def | (other:Definition) = new |(definition, other)
+
+    def *       = AttributedDescription(definition, zeroOrMore = true)
+    def unary_! = AttributedDescription(definition, not = true)
+    def ?       = AttributedDescription(definition, zeroOrOne = true)
+    def +       = AttributedDescription(definition, oneOrMore = true)
   }
+}
+
+trait Rule extends Definition {
+  def := (definition:Definition)(implicit addRule: (Rule, Definition) => Unit):Unit =
+    addRule(this, definition)
 }
 
 abstract class Description(definitions: => Definition) extends Definition { lazy val contents = definitions }
@@ -75,9 +75,9 @@ case object `[`   extends Unspecified("`[`")
 case object `=>`  extends Unspecified("`=>`")
 case object `<-`  extends Unspecified("`<-`")
 case object `'''` extends Unspecified("`'''`")
-case object `<:` extends Unspecified("`<:`")
-case object `>:` extends Unspecified("`>:`")
-case object `<%` extends Unspecified("`<%`")
+case object `<:`  extends Unspecified("`<:`")
+case object `>:`  extends Unspecified("`>:`")
+case object `<%`  extends Unspecified("`<%`")
 
 case object `import`  extends Unspecified("`import`")
 case object `package` extends Unspecified("`package`")
@@ -97,6 +97,7 @@ case object `finally` extends Unspecified("`finally`")
 case object `else`    extends Unspecified("`else`")
 case object `yield`   extends Unspecified("`yield`")
 case object `macro`   extends Unspecified("`macro`")
+case object `extends` extends Unspecified("`extends`")
 
 case object `public`    extends Unspecified("`public`")
 case object `private`   extends Unspecified("`private`")

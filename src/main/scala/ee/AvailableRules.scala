@@ -1,11 +1,11 @@
-package ee.clean
+package ee
 
 object Global {
 
   object TopLevelStatements extends Rule
-  object Statements extends Rule
+  object BlockStatements extends Rule
 
-  object PackageStatement extends Rule
+  object Package extends Rule
 
   object Import extends Rule {
     object Expression extends Rule
@@ -39,9 +39,20 @@ object Global {
       def Constraint = Global.Type.Constraint
       def Assignment = Global.Type.Assignment
     }
+    object Default extends Rule
   }
 
   object Pattern extends Rule {
+    object Bound extends Rule
+    object Typed extends Rule
+    object Infix extends Rule
+    object Simple extends Rule
+    object Underscore extends Rule
+    object StringInterpolation extends Rule
+    object Interpolation extends Rule
+    object Reference extends Rule
+    object Product extends Rule
+    object Sequence extends Rule
   }
 
   object Value {
@@ -51,6 +62,7 @@ object Global {
     object Parameters extends Rule
     object Parameter extends Rule
     object Application extends Rule
+    object QualifiedId extends Rule
   }
 
   object Type {
