@@ -1,9 +1,16 @@
 package ee
 
 object Template extends Description(
-  ???//TemplateSignatures ~ TemplateBody.?
+  Decorations ~ TemplateType ~ Id ~ TypeParameters.* ~ Constructor ~ ParentTypes ~ TemplateBody.?
 )
 
+object TemplateType extends Description(
+  `trait` | `object` | `class`
+)
+
+object Constructor extends Description(
+  Decorations ~ Parameters.*
+)
 
 object TemplateBody extends Description(
   `{` ~ SelfType.? ~ BlockStatements ~ `}`

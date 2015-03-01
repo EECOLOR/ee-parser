@@ -1,11 +1,7 @@
 package ee
 
 object Try extends Description(
-  `try` ~ Expression ~ (Catch ~ Finally.? | Finally)
-)
-
-object Catch extends Description(
-  `catch` ~ Expression
+  `try` ~ Expression ~ (`catch` ~ Expression ~ Finally.? | Finally)
 )
 
 object Finally extends Description(

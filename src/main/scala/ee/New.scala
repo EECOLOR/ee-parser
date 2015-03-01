@@ -11,11 +11,3 @@ object ParentTypesWithPrefix extends Description(
 object EarlyInitialization extends Description(
   TemplateBody ~ `with`
 )
-
-object ParentTypes extends Description(
-  ParentType ~ (`with` ~ ParentType).*
-)
-
-object ParentType extends Description(
-  TypeReference ~ ProductExpression.*
-)

@@ -1,7 +1,7 @@
 package ee
 
 object Member extends Description(
-  Annotation.* ~ Modifier.* ~ (Val | Var | Def | Type) ~ Assignment.?
+  Decorations ~ (Val | Var | Def | Type) ~ Assignment.?
 )
 
 object Val extends Description(

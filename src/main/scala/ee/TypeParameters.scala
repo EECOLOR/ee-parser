@@ -5,7 +5,7 @@ object TypeParameters extends Description(
 )
 
 object TypeParameter extends Description(
-  Annotation.* ~ Variance.? ~ (Id | `_`) ~ TypeParameters ~ TypeConstraint.*
+  Decorations ~ Variance.? ~ (Id | `_`) ~ TypeParameters ~ TypeConstraint.*
 )
 
 object Variance extends Description(
