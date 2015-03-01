@@ -1,8 +1,12 @@
 package ee
 
-object StringInterpolation {
+object StringInterpolation extends Description(
+  Reference ~ `"` ~ (Interpolation ~ !`"`) ~ `"`
+)
 
-}
+object Interpolation extends Description(
+  InterpolationEscape | `$` ~ Id | `$` ~ `{` ~ BlockStatements ~ `}`
+)
 
 object InterpolationEscape extends Description(
   `$` ~ `$`

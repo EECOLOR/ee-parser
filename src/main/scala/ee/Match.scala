@@ -9,11 +9,7 @@ object Cases extends Description(
 )
 
 object Case extends Description(
-  `case` ~ CasePattern ~ Guard.? ~ `=>` ~ BlockStatements ~ !`case`
-)
-
-object CasePattern extends Description(
-  Pattern ~ (`|` ~ Pattern).*
+  `case` ~ Patterns ~ Guard.? ~ `=>` ~ BlockStatements ~ !`case`
 )
 
 object Guard extends Description(

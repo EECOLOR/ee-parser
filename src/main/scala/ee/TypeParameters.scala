@@ -1,5 +1,13 @@
 package ee
 
 object TypeParameters extends Description(
-  `[` ~ Type ~ (`,` ~ Type).* ~ `]`
+  `[` ~ TypeParameter ~ (`,` ~ TypeParameter).* ~ `]`
+)
+
+object TypeParameter extends Description(
+  Annotation.* ~ Variance.? ~ (Id | `_`) ~ TypeParameters ~ TypeConstraint.*
+)
+
+object Variance extends Description(
+  `covariant` | `contravariant`
 )

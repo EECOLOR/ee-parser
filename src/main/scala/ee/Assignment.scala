@@ -1,5 +1,5 @@
 package ee
 
 object Assignment extends Description(
-  `=` ~ Expression
+  `=` ~ (`macro` ~ Reference | Expression)
 )

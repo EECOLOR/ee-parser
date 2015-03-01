@@ -5,5 +5,5 @@ object Parameters extends Description(
 )
 
 object Parameter extends Description(
-  Modifier.* ~ Id ~ AssignedType.? ~ Assignment.?
+  Member
 )

@@ -1,7 +1,11 @@
 package ee
 
+object Patterns extends Description(
+  Pattern ~ (`|` ~ Pattern).*
+)
+
 object Pattern extends Description(
-  TypedPattern | BoundPattern
+  TypedPattern | BoundPattern | OtherPattern
 )
 
 object TypedPattern extends Description(
@@ -9,15 +13,25 @@ object TypedPattern extends Description(
 )
 
 object BoundPattern extends Description(
-  (Id ~ `@`).? ~ (ExpandVariableArity | InfixPattern)
+  Id ~ `@` ~ OtherPattern
+)
+
+object OtherPattern extends Description(
+  InfixPattern | SimplePattern
 )
 
 object InfixPattern extends Description(
-  SimplePattern ~ (Id ~ SimplePattern).*
+  SimplePattern ~ (Reference ~ SimplePattern).+
 )
 
 object SimplePattern extends Description(
-  UnderscorePattern | StringInterpolationPattern | Literals | ProductPattern | Id
+  UnderscorePattern          |
+  StringInterpolationPattern |
+  Literal                    |
+  ReferencePattern           |
+  ProductPattern             |
+  Id                         |
+  SequencePattern
 )
 
 object UnderscorePattern extends Description(
@@ -25,13 +39,21 @@ object UnderscorePattern extends Description(
 )
 
 object StringInterpolationPattern extends Description(
-  QualifiedId ~ `"` ~ (InterpolationPattern ~ !`"`) ~ `"`
+  Reference ~ `"` ~ (InterpolationPattern ~ !`"`) ~ `"`
 )
 
 object InterpolationPattern extends Description(
-  InterpolationEscape | `$` ~ Id | `$` ~ `{` ~ CasePattern ~ `}`
+  InterpolationEscape | `$` ~ Id | `$` ~ `{` ~ Pattern ~ `}`
+)
+
+object ReferencePattern extends Description(
+  TypeReference ~ ProductPattern
 )
 
 object ProductPattern extends Description(
-  (QualifiedId ~ TypeParameters.*).? ~ `(` ~ CasePattern ~ (`,` ~ CasePattern).* ~`)`
+  `(` ~ Pattern ~ (`,` ~ Pattern).* ~`)`
+)
+
+object SequencePattern extends Description(
+  `_` ~ `*`
 )

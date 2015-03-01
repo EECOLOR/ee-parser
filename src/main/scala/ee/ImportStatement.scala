@@ -5,7 +5,7 @@ object ImportStatement extends Description(
 )
 
 object ImportExpression extends Description(
-  QualifiedId ~ (`.` ~ (`_` | ImportSelectors)).?
+  Reference ~ (`.` ~ (`_` | ImportSelectors)).?
 )
 
 object ImportSelectors extends Description(
@@ -13,5 +13,5 @@ object ImportSelectors extends Description(
 )
 
 object ImportSelector extends Description(
-  (QualifiedId | `_`) ~ (`=>` ~ (QualifiedId | `_`)).?
+  (Reference | `_`) ~ (`=>` ~ (Reference | `_`)).?
 )
