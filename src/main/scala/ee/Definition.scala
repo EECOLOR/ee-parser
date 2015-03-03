@@ -21,15 +21,19 @@ object Definition {
 }
 
 trait Rule extends Definition {
-  def := (definition:Definition)(implicit addRule: (Rule, Definition) => Unit):Unit =
+  def := (definition:Definition)(implicit addRule: Rules.AddRule):Unit =
     addRule(this, definition)
 }
 
 sealed abstract class ToString(val name: String)       extends Definition { override def toString = name }
 sealed abstract class Unspecified(name:String)         extends ToString(name)
 
-case class ~(description:Definition, rest:Definition)  extends ToString(s"($description ~ $rest)")
-case class |(description:Definition, other:Definition) extends ToString(s"($description | $other)")
+sealed trait CompoundDefinition extends Definition {
+  def left: Definition
+  def right: Definition
+}
+case class ~(left: Definition, right: Definition) extends ToString(s"($left ~ $right)")  with CompoundDefinition
+case class |(left: Definition, right: Definition) extends ToString(s"($left | $right)") with CompoundDefinition
 
 case class AttributedDefinition(
   description: Definition,
@@ -67,7 +71,7 @@ case object `|`   extends Unspecified("`|`")
 case object `@`   extends Unspecified("`@`")
 case object `#`   extends Unspecified("`#`")
 case object `*`   extends Unspecified("`*`")
-case object `$`   extends Unspecified("`$`")
+case object `S`   extends Unspecified("`$`")
 case object `"`   extends Unspecified("`\"`")
 case object `{`   extends Unspecified("`{`")
 case object `}`   extends Unspecified("`}`")

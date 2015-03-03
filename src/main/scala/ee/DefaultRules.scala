@@ -110,8 +110,8 @@ object DefaultRules extends Rules(Global) {
           Block               := `{` ~ BlockStatements ~ `}`
         Primitive             := Literal | StringInterpolation | Value.Reference | `_`
           StringInterpolation := Value.Reference ~ `"` ~ (Interpolation | !`"`).+ ~ `"` // "
-          Interpolation       := InterpolationEscape | `$` ~ Id | `$` ~ Block
-          InterpolationEscape := `$` ~ `$`
+          Interpolation       := InterpolationEscape | `S` ~ Id | `S` ~ Block
+          InterpolationEscape := `S` ~ `S`
   }
 
   new Scope(Pattern) { import scope._
@@ -122,7 +122,7 @@ object DefaultRules extends Rules(Global) {
       Simple               := Underscore | StringInterpolation | Literal | Reference | Product | Id | Sequence
        Underscore          := `_` ~ Type.Assignment.?
        StringInterpolation := Value.Reference ~ `"` ~ (Interpolation ~ !`"`) ~ `"` // "
-       Interpolation       := Expression.InterpolationEscape | `$` ~ Id | `$` ~ `{` ~ Pattern ~ `}`
+       Interpolation       := Expression.InterpolationEscape | `S` ~ Id | `S` ~ `{` ~ Pattern ~ `}`
        Reference           := Value.Reference ~ Product
        Product             := `(` ~ Pattern ~ (`,` ~ Pattern).* ~`)`
        Sequence            := `_` ~ `*`
