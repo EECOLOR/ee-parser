@@ -1,7 +1,7 @@
-package ee
+package ee.grammar
 
-object DefaultRules extends Rules(Global) {
-  import scope._, Metadata.Decorations, Definition.Operations
+object DefaultRules extends Productions(Nonterminal) {
+  import scope._, Metadata.Decorations, Element.Operations, Terminal._
 
   TopLevelStatements := (Package | Import | Template).*
   BlockStatements    := (          Import | Template | Member | Expression).*
@@ -12,10 +12,10 @@ object DefaultRules extends Rules(Global) {
     Import             := Decorations ~ `import` ~ Expression ~ (`,` ~ Expression).*
       Expression       := Single | All | Selectors
       Single           := Value.Reference
-      All              := Value.Reference ~ `.` ~ `_`
+      All              := Value.Reference ~ `.` ~ `__`
       Selectors        := `{` ~ Selector ~ (`,` ~ Selector).* ~ `}`
       Selector         := SimpleSelector | RenamingSelector
-      SimpleSelector   := Value.Reference | `_`
+      SimpleSelector   := Value.Reference | `__`
       RenamingSelector := SimpleSelector ~ `=>` ~ SimpleSelector
   }
 
@@ -28,14 +28,14 @@ object DefaultRules extends Rules(Global) {
       InitialBody := Body ~ `with`
       Parent      := Value.Reference ~ Value.Application.*
     Body          := `{` ~ Self.? ~ BlockStatements ~ `}`
-      Self        := (`_` | Id) ~ Type.Assignment.? ~ `=>`
+      Self        := (`__` | Id) ~ Type.Assignment.? ~ `=>`
     New           := `new` ~ (Parents | Parents ~ Body | Body)
   }
 
   new Scope(Member) { import scope._
     Member    := Decorations ~ (Type | Def | Val | Var | Default) ~ Value.Assignment.?
       Type    :=  `type` ~ Id ~ Type.Parameters.* ~ Type.Constraint.*
-      Def     := `def` ~ Id ~ Type.Parameters.* ~ Value.Parameters.* ~ Type.Assignment.? 
+      Def     := `def` ~ Id ~ Type.Parameters.* ~ Value.Parameters.* ~ Type.Assignment.?
       Val     := `val` ~ Ids ~ (`,` ~ Ids).*
       Var     := `var` ~ Ids ~ (`,` ~ Ids).*
       Ids     := Default | Pattern
@@ -45,7 +45,7 @@ object DefaultRules extends Rules(Global) {
   new Scope(Type) { import scope._
     Assignment            := `:` ~ (Reference | ExpandVariableArity)
     Parameters            := `[` ~ Parameter ~ (`,` ~ Parameter).* ~ `]`
-      Parameter           := Decorations ~ Variance.? ~ (Id | `_`) ~ Parameters.? ~ Constraint.*
+      Parameter           := Decorations ~ Variance.? ~ (Id | `__`) ~ Parameters.? ~ Constraint.*
       Variance            := `covariant` | `contravariant`
       Constraint          := (`<:` | `>:` | `<%` | `:`) ~ Reference
     Application           := `[` ~ Reference ~ (`,` ~ Reference) ~ `]`
@@ -55,7 +55,7 @@ object DefaultRules extends Rules(Global) {
       Structural          := Template.Body
       VariableArity       := Single ~ `*`
       Projection          := `#` ~ Single
-      ExpandVariableArity := `_` ~ `*`
+      ExpandVariableArity := `__` ~ `*`
   }
 
   new Scope(Value) { import scope._
@@ -104,11 +104,11 @@ object DefaultRules extends Rules(Global) {
         Cases          := `{` ~ Case.+ ~ `}`
         Case           := `case` ~ Pattern ~ (`|` ~ Pattern).* ~ Guard.? ~ `=>` ~ BlockStatements
 
-      Simple                  := (Group | Primitive) ~ (`.` ~ UnqualifiedReference | Application).* ~ `_`.?
+      Simple                  := (Group | Primitive) ~ (`.` ~ UnqualifiedReference | Application).* ~ `__`.?
         Group                 := Product | Cases | Block
           Product             := `(` ~ Expression ~ (`,` ~ Expression).* ~ `)`
           Block               := `{` ~ BlockStatements ~ `}`
-        Primitive             := Literal | StringInterpolation | Value.Reference | `_`
+        Primitive             := Literal | StringInterpolation | Value.Reference | `__`
           StringInterpolation := Value.Reference ~ `"` ~ (Interpolation | !`"`).+ ~ `"` // "
           Interpolation       := InterpolationEscape | `S` ~ Id | `S` ~ Block
           InterpolationEscape := `S` ~ `S`
@@ -116,15 +116,15 @@ object DefaultRules extends Rules(Global) {
 
   new Scope(Pattern) { import scope._
     Pattern                := Typed | Bound | Infix | Simple
-      Typed                := (Id | `_`) ~ Type.Assignment
+      Typed                := (Id | `__`) ~ Type.Assignment
       Bound                :=  Id ~ `@` ~ (Infix | Simple)
       Infix                := Simple ~ (Value.Reference ~ Simple).+
       Simple               := Underscore | StringInterpolation | Literal | Reference | Product | Id | Sequence
-       Underscore          := `_` ~ Type.Assignment.?
+       Underscore          := `__` ~ Type.Assignment.?
        StringInterpolation := Value.Reference ~ `"` ~ (Interpolation ~ !`"`) ~ `"` // "
        Interpolation       := Expression.InterpolationEscape | `S` ~ Id | `S` ~ `{` ~ Pattern ~ `}`
        Reference           := Value.Reference ~ Product
        Product             := `(` ~ Pattern ~ (`,` ~ Pattern).* ~`)`
-       Sequence            := `_` ~ `*`
+       Sequence            := `__` ~ `*`
   }
 }
