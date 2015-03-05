@@ -2,4 +2,7 @@ package ee.grammar.validation
 
 import ee.grammar.Nonterminal
 
-case class ProductionProblem(nonterminal: Nonterminal, description: String)
+sealed trait ProductionProblem {
+  def description:String
+}
+case class NonterminalProblem(nonterminal: Nonterminal, description: String) extends ProductionProblem

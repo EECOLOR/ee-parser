@@ -2,7 +2,7 @@ package ee.grammar
 
 abstract class Productions[T](scope:T) extends Scope(scope) {
 
-  private var _productions = Set.empty[Productions.Production]
+  private var _productions = Set.empty[Production[_]]
   def productions = _productions
 
   implicit val addProduction:Productions.AddProduction =
@@ -13,7 +13,5 @@ abstract class Productions[T](scope:T) extends Scope(scope) {
 }
 
 object Productions {
-  type Production = (Nonterminal, Element)
-
   abstract class AddProduction extends ((Nonterminal, Element) => Unit)
 }

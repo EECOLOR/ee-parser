@@ -3,7 +3,7 @@ def github(user: String, project: String, branch: String): RootProject =
 
 lazy val root = (
   project in file(".")
-  dependsOn github("EECOLOR", "scala-program-builder", "742c138c79")
+  dependsOn github("EECOLOR", "scala-program-builder", "master")
   settings (
             name := "ee-parser",
     scalaVersion := "2.11.6"
