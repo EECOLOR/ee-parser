@@ -1,7 +1,11 @@
-name := "ee-parser"
+def github(user: String, project: String, branch: String): RootProject =
+  RootProject(uri(s"git://github.com/$user/$project.git#$branch"))
 
-scalaVersion := "2.11.5"
-
-libraryDependencies ++= Seq(
- "org.qirx" %% "scala-program-builder" % "0.2-SNAPSHOT"
+lazy val root = (
+  project in file(".")
+  dependsOn github("EECOLOR", "scala-program-builder", "742c138c79")
+  settings (
+            name := "ee-parser",
+    scalaVersion := "2.11.6"
+  )
 )
