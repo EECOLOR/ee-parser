@@ -1,8 +1,8 @@
 package ee.ast
 
 import ee.ast.meta.Decorations
-import ee.ast.types.`TypeReference | ExpandVariableArity`
 import ee.ast.types.TypeParameterList
+import ee.ast.types.`TypeReference | ExpandVariableArity`
 
 case class Template(
   decorations    : Decorations,

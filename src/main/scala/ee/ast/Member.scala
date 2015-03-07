@@ -1,9 +1,9 @@
 package ee.ast
 
 import ee.ast.meta.Decorations
-import ee.ast.types.`TypeReference | ExpandVariableArity`
 import ee.ast.types.TypeConstraint
 import ee.ast.types.TypeParameterList
+import ee.ast.types.`TypeReference | ExpandVariableArity`
 
 sealed trait Member {
   def decorations : Decorations
