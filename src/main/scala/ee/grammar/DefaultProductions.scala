@@ -70,6 +70,7 @@ object DefaultRules extends Productions(Nonterminal) {
 
   new Scope(Metadata) { import scope._
     Decorations       := Annotation.* ~ Modifier.*
+      Annotation      := `@` ~ Value.Reference ~ Value.Application.*
       Modifier        := AccessModifier | SpecialModifier
       AccessModifier  := (`public` | `private` | `protected`) ~ AccessQualifier.?
       AccessQualifier := `[` ~ Value.Reference ~ (`,` ~ Value.Reference).* ~ `]`
