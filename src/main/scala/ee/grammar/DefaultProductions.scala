@@ -51,7 +51,7 @@ object DefaultRules extends Productions(Nonterminal) {
     Application           := `[` ~ Reference ~ (`,` ~ Reference) ~ `]`
     Reference             := Infix | Single | Structural | VariableArity | `__`
       Infix               := Reference ~ Reference ~ Reference
-      Single              := Reference ~ Projection.*
+      Single              := Reference ~ Application.? ~ Projection.*
       Structural          := Template.Body
       VariableArity       := Single ~ `*`
       Projection          := `#` ~ Single
