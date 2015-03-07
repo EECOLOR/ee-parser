@@ -45,11 +45,11 @@ object DefaultRules extends Productions(Nonterminal) {
   new Scope(Type) { import scope._
     Assignment            := `:` ~ (Reference | ExpandVariableArity)
     Parameters            := `[` ~ Parameter ~ (`,` ~ Parameter).* ~ `]`
-      Parameter           := Decorations ~ Variance.? ~ (Id | `__`) ~ Parameters.? ~ Constraint.*
+      Parameter           := Decorations ~ Variance.? ~ Id ~ Parameters.? ~ Constraint.*
       Variance            := `covariant` | `contravariant`
       Constraint          := (`<:` | `>:` | `<%` | `:`) ~ Reference
     Application           := `[` ~ Reference ~ (`,` ~ Reference) ~ `]`
-    Reference             := Infix | Single | Structural | VariableArity
+    Reference             := Infix | Single | Structural | VariableArity | `__`
       Infix               := Reference ~ Reference ~ Reference
       Single              := Reference ~ Projection.*
       Structural          := Template.Body
