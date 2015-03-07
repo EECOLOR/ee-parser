@@ -28,9 +28,9 @@ object AmbiguityDetection extends WithDefaultImplementation[Static :+: Set :+: C
  *                                                                   \__________/
  */
 
-  case object GetTerminalGenerator                          extends Return[TerminalGenerator]
-  case object GetSeparatorGenerator                         extends Return[SeparatorGenerator]
-  case class  CreateEarleyParser(grammarArtefacts: Grammar) extends Return[EarleyParser]
+  case object GetTerminalGenerator                    extends Return[TerminalGenerator]
+  case object GetSeparatorGenerator                   extends Return[SeparatorGenerator]
+  case class  CreateParser(grammarArtefacts: Grammar) extends Return[String => Boolean]
 
   case class Detect(
     grammar: Grammar,
@@ -38,28 +38,28 @@ object AmbiguityDetection extends WithDefaultImplementation[Static :+: Set :+: C
     duration:FiniteDuration
   ) extends ReturnWithDefault[Option[AmbiguityProblem]](
       for {
-        startTime         <- GetTime
-        backend           <- CreateBackend(grammar, depth)
-        earleyParser      <- CreateEarleyParser(grammar)
-        result            <- Search(backend, earleyParser, deadline = startTime + duration)
+        startTime <- GetTime
+        backend   <- CreateBackend(grammar, depth)
+        parser    <- CreateParser(grammar)
+        result    <- Search(backend, parser, deadline = startTime + duration)
       } yield result
     )
 
   case class Search(
-    backend: Backend,
-    earleyParser: EarleyParser,
+    backend: () => String,
+    parser: String => Boolean,
     deadline: Deadline
   ) extends ReturnWithDefault[Option[AmbiguityProblem]](
     for {
       sentence  <- ValueOf(backend())
-      ambiguous <- ValueOf(earleyParser apply sentence)
+      ambiguous <- ValueOf(parser apply sentence)
       result    <- if (ambiguous) ambiguityProblem(sentence).toProgram
                    else if (deadline.isOverdue) ValueOf(None).toProgram
-                   else Search(backend, earleyParser, deadline).toProgram
+                   else Search(backend, parser, deadline).toProgram
     } yield result
   )
 
-  case class CreateBackend(grammar:Grammar, threshold: Int) extends ReturnWithDefault[Backend](
+  case class CreateBackend(grammar:Grammar, threshold: Int) extends ReturnWithDefault[() => String](
     for {
       terminalGenerator  <- GetTerminalGenerator
       separatorGenerator <- GetSeparatorGenerator
