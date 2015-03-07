@@ -7,11 +7,11 @@ import org.qirx.programbuilder._
 import ee.WithDefaultImplementation
 import ee.grammar.{Choice => or}
 import ee.grammar.Choice
-import ee.grammar.CompoundElement
 import ee.grammar.Element
 import ee.grammar.Nonterminal
+import ee.grammar.Sequence
 
-object NonterminalChecker extends WithDefaultImplementation[Set :+: Static :+: CNil] {
+object ProductionsChecker extends WithDefaultImplementation[Set :+: Static :+: CNil] {
 
   // http://soft-dev.org/pubs/pdf/vasudevan_tratt__detecting_ambiguity_in_programming_language_grammars.pdf
 
@@ -53,9 +53,7 @@ object NonterminalChecker extends WithDefaultImplementation[Set :+: Static :+: C
     } yield choiceProblems
 
   private def detectAmbiguityProblems(productions: Productions) =
-    for {
-      _ <- ValueOf(???)
-    } yield ???
+    ValueOf(???).toProgram
 
   private def extractAll[T <: Element : ClassTag](definition: Element): Set[T] =
     (Set(definition) ++ traverseDefinitionsIn(definition)).flatMap {
@@ -65,9 +63,18 @@ object NonterminalChecker extends WithDefaultImplementation[Set :+: Static :+: C
 
   private def traverseDefinitionsIn(definition: Element): Set[Element] =
     definition match {
-      case c: CompoundElement => traverseDefinitionsIn(c.left) ++ traverseDefinitionsIn(c.right)
+      case CompoundElement(left, right) => traverseDefinitionsIn(left) ++ traverseDefinitionsIn(right)
       case _                  => Set.empty
     }
+
+  private object CompoundElement {
+    def unapply(e:Element):Option[(Element, Element)] =
+      Option(e).flatMap {
+        case Sequence(head, tail)  => Some( (head, tail) )
+        case Choice  (left, right) => Some( (left, right) )
+        case _                     => None
+      }
+  }
 }
 
 

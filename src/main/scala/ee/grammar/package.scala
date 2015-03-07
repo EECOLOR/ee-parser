@@ -2,11 +2,10 @@ package ee
 
 package object grammar {
 
-  type Production[A <: Element] = (A, Element)
-
-  type Start   = Nonterminal.TopLevelStatements.type
-  type Grammar = (Nonterminal, Terminal, Production[_], Start)
+  type Production = (Nonterminal, Element)
 
   val  | = Choice
   type | = Choice
+  val  ~ = Sequence
+  type ~ = Sequence
 }

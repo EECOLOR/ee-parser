@@ -15,12 +15,8 @@ object Element {
   }
 }
 
-sealed trait CompoundElement extends Element {
-  def left: Element
-  def right: Element
-}
-case class ~     (left: Element, right: Element) extends CompoundElement
-case class Choice(left: Element, right: Element) extends CompoundElement
+case class Sequence(head: Element, tail : Element) extends Element
+case class Choice  (left: Element, right: Element) extends Element
 
 case class AttributedElement(
   element    : Element,
@@ -31,7 +27,10 @@ case class AttributedElement(
   not        : Boolean = false
 ) extends Element
 
-sealed trait Terminal extends Element
+// we can lose this once we have union types
+sealed trait `Nonterminal | Terminal` extends Element
+
+sealed trait Terminal extends `Nonterminal | Terminal`
 
 object Terminal {
   case object Id             extends Terminal
@@ -104,7 +103,7 @@ object Terminal {
   case object `class`  extends Terminal
 }
 
-sealed trait Nonterminal extends Element {
+sealed trait Nonterminal extends `Nonterminal | Terminal` {
   def := (element:Element)(implicit addProduction: Productions.AddProduction):Unit =
     addProduction(this, element)
 }

@@ -2,7 +2,7 @@ package ee.grammar
 
 abstract class Productions[T](scope:T) extends Scope(scope) {
 
-  private var _productions = Set.empty[Production[_]]
+  private var _productions = Set.empty[Production]
   def productions = _productions
 
   implicit val addProduction:Productions.AddProduction =
