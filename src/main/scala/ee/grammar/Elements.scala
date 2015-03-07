@@ -83,6 +83,9 @@ object Terminal {
   case object `yield`   extends Terminal
   case object `macro`   extends Terminal
   case object `extends` extends Terminal
+  // object A; object B; case class Pair[A, B](a: A, b: B)
+  // val x:Pair[T, T] forSome { type T} = Pair(A, B)
+  case object `forSome` extends Terminal
 
   case object `public`    extends Terminal
   case object `private`   extends Terminal
