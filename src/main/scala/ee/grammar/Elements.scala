@@ -5,13 +5,13 @@ sealed trait Element
 object Element {
   implicit class Operations(element:Element) {
 
-    def ~ (tail:Element)  = new ~(element, tail)
-    def | (other:Element) = new |(element, other)
+    def ~ (tail:Element):Sequence = new ~(element, tail)
+    def | (other:Element):Choice  = new |(element, other)
 
-    def *       = AttributedElement(element, zeroOrMore = true)
-    def ?       = AttributedElement(element, zeroOrOne = true)
-    def +       = AttributedElement(element, oneOrMore = true)
-    def unary_! = AttributedElement(element, not = true)
+    def *       : AttributedElement = AttributedElement(element, zeroOrMore = true)
+    def ?       : AttributedElement = AttributedElement(element, zeroOrOne = true)
+    def +       : AttributedElement = AttributedElement(element, oneOrMore = true)
+    def unary_! : AttributedElement = AttributedElement(element, not = true)
   }
 }
 
@@ -143,9 +143,9 @@ object Nonterminal {
     object Ids     extends Nonterminal
     object Def     extends Nonterminal
     object Type    extends Nonterminal {
-      def Parameters = Nonterminal.Type.Parameters
-      def Constraint = Nonterminal.Type.Constraint
-      def Assignment = Nonterminal.Type.Assignment
+      val Parameters = Nonterminal.Type.Parameters
+      val Constraint = Nonterminal.Type.Constraint
+      val Assignment = Nonterminal.Type.Assignment
     }
   }
 
