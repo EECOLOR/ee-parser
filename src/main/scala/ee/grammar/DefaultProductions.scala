@@ -82,7 +82,7 @@ object DefaultRules extends Productions(Nonterminal) {
   new Scope(Expression) { import scope._, Value.UnqualifiedReference
     Expression         := KeywordTriggered | Lambda | Compound
 
-      KeywordTriggered := If | Do  | While | Try | Throw | Return | For | TickEmbedded | Template.New
+      KeywordTriggered := If | Do  | While | Try | Throw | Return | For | Embedded | Template.New
         If             := `if` ~ `(` ~ Expression ~ `)` ~ Expression ~ (`else` ~ Expression).?
         Do             := `do` ~ Expression ~ `while` ~ `(` ~ Expression ~ `)`
         While          := `while` ~ `(` ~ Expression ~ `)` ~ Expression
@@ -94,7 +94,7 @@ object DefaultRules extends Productions(Nonterminal) {
         For            := `for` ~ `{` ~ Generator ~ (Generator | Member | Guard).* ~ `}` ~ `yield`.? ~ Expression
         Generator      := Id ~ `<-` ~ Expression ~ Guard.?
         Guard          := `if` ~ Expression
-        TickEmbedded   := `'''` ~ Id ~ !`'''` ~ `'''` // '''
+        Embedded       := `'''` ~ Value.Reference ~ !`'''` ~ `'''` // '''
 
       Lambda           := ((Value.Parameters | Value.Parameter) ~ `=>`).+ ~ Expression
 

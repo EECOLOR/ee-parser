@@ -234,7 +234,7 @@ object Nonterminal {
     object Interpolation       extends Nonterminal
     object InterpolationEscape extends Nonterminal
     object StringInterpolation extends Nonterminal
-    object TickEmbedded        extends Nonterminal
+    object Embedded            extends Nonterminal
     object Primitive           extends Nonterminal
     object Compound            extends Nonterminal
     object Prefix              extends Nonterminal
