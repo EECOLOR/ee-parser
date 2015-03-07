@@ -2,13 +2,13 @@ package ee
 
 import org.qirx.programbuilder._
 
-trait WithDefaultImplementation[Result <: Coproduct] {
+trait WithDefaultImplementation[R <: Coproduct] {
 
   def defaultImplementationOf[T](r:ReturnWithDefault[T]):ResultProgram[T] = ReturnRunner(r)
 
-  protected implicit val programType = ProgramType[ReturnWithDefault :+: Return :+: Result]
+  protected implicit val programType = ProgramType[ReturnWithDefault :+: Return :+: R]
 
-  type ResultProgram[T] = Program[(Return :+: Result)#Instance]#Instance[T]
+  type ResultProgram[T] = Program[(Return :+: R)#Instance]#Instance[T]
 
   trait Return[T]
 
@@ -16,7 +16,7 @@ trait WithDefaultImplementation[Result <: Coproduct] {
     lazy val defaultImplementation = default
   }
 
-  private[this] object ResultRunner extends ((Return :+: Result)#Instance ~> ResultProgram) {
+  private[this] object ResultRunner extends ((Return :+: R)#Instance ~> ResultProgram) {
     def transform[x] = Program.lift
   }
 
