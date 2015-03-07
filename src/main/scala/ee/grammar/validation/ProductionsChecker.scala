@@ -1,15 +1,12 @@
-package ee.grammar.validation
+package ee
+package grammar
+package validation
 
-import scala.reflect.ClassTag
+import grammar.{Choice => or}
 
 import org.qirx.programbuilder._
 
-import ee.WithDefaultImplementation
-import ee.grammar.{Choice => or}
-import ee.grammar.Choice
-import ee.grammar.Element
-import ee.grammar.Nonterminal
-import ee.grammar.Sequence
+import scala.reflect.ClassTag
 
 object ProductionsChecker extends WithDefaultImplementation[Set :+: Static :+: CNil] {
 

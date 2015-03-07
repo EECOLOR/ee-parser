@@ -1,9 +1,10 @@
-package ee.grammar
+package ee
+package grammar
 package validation
 package ambiguity
 
 import org.qirx.programbuilder._
-import ee.WithDefaultImplementation
+
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration.Deadline
 import scala.util.Random
