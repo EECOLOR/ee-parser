@@ -21,7 +21,7 @@ object DefaultRules extends Productions(Nonterminal) {
 
   new Scope(Template) { import scope._
     Template      := Decorations ~ Nature ~ Id ~ Type.Parameters.* ~ Constructor.? ~ Extends.? ~ Body.?
-      Nature      := `trait` | `object` | `class`
+      Nature      := `trait` | `object` | `class` | `enum`
       Constructor := Decorations ~ Value.Parameters.+
       Extends     := `extends` ~ Parents
     Parents       := InitialBody.? ~ Parent ~ (`with` ~ Parent).*
@@ -74,7 +74,9 @@ object DefaultRules extends Productions(Nonterminal) {
       Modifier        := AccessModifier | SpecialModifier
       AccessModifier  := (`public` | `private` | `protected`) ~ AccessQualifier.?
       AccessQualifier := `[` ~ Value.Reference ~ (`,` ~ Value.Reference).* ~ `]`
-      SpecialModifier :=  `implicit` | `override` | `abstract` | `package` | `case`
+      SpecialModifier :=  `lazy`  | `override` | `abstract`  | `sealed` | `generateEquals`  |
+                          `sync`  | `volatile` | `transient` | `native` | `generateUnapply` |
+                          `final` | `implicit` | `package`   | `static` | `generateApply`
   }
 
   new Scope(Expression) { import scope._, Value.UnqualifiedReference
@@ -113,9 +115,13 @@ object DefaultRules extends Productions(Nonterminal) {
           StringInterpolation := Value.Reference ~ `"` ~ (Interpolation | !`"`).+ ~ `"` // "
           Interpolation       := InterpolationEscape | `S` ~ Id | `S` ~ Block
           InterpolationEscape := `S` ~ `S`
+        Literal               := Number | Boolean | String | Symbol | `null`
+         Boolean              := `true` | `false`
+         String               := `"` ~ !`"` ~ `"` // "
+
   }
 
-  new Scope(Pattern) { import scope._
+  new Scope(Pattern) { import scope._, Expression.Literal
     Pattern                := Typed | Bound | Infix | Simple
       Typed                := (Id | `__`) ~ Type.Assignment
       Bound                :=  Id ~ `@` ~ (Infix | Simple)

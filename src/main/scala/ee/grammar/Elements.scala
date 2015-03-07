@@ -32,9 +32,11 @@ sealed trait `Nonterminal | Terminal` extends Element
 
 sealed trait Terminal extends `Nonterminal | Terminal`
 
+
 object Terminal {
   case object Id             extends Terminal
-  case object Literal        extends Terminal
+  case object Number         extends Terminal
+  case object Symbol         extends Terminal
   case object PrefixOperator extends Terminal
 
   // make aliases for these
@@ -101,6 +103,24 @@ object Terminal {
   case object `trait`  extends Terminal
   case object `object` extends Terminal
   case object `class`  extends Terminal
+  case object `enum`   extends Terminal
+
+  case object `true`      extends Terminal
+  case object `false`     extends Terminal
+  case object `null`      extends Terminal
+
+  case object `sync`      extends Terminal
+  case object `volatile`  extends Terminal
+  case object `transient` extends Terminal
+  case object `native`    extends Terminal
+  case object `lazy`      extends Terminal
+  case object `sealed`    extends Terminal
+  case object `final`     extends Terminal
+  case object `static`    extends Terminal
+
+  case object `generateEquals`  extends Terminal
+  case object `generateUnapply` extends Terminal
+  case object `generateApply`   extends Terminal
 }
 
 sealed trait Nonterminal extends `Nonterminal | Terminal` {
@@ -220,6 +240,10 @@ object Nonterminal {
     object Infix               extends Nonterminal
     object Simple              extends Nonterminal
     object Match               extends Nonterminal
+    object Literal             extends Nonterminal
+    object Number              extends Nonterminal
+    object Boolean             extends Nonterminal
+    object String              extends Nonterminal
   }
 
   object Metadata {
