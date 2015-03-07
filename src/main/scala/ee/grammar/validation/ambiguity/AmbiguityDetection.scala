@@ -90,6 +90,6 @@ object AmbiguityDetection extends WithDefaultImplementation[Static :+: Set :+: C
 
   case object GetTime extends ReturnWithDefault[Deadline](ValueOf(Deadline.now))
 
-  private def ambiguityProblem(sentence: String) =
+  private[this] def ambiguityProblem(sentence: String) =
     ValueOf(Some(AmbiguityProblem(sentence, "The sentence led to an ambiguous result"))  )
 }

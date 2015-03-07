@@ -16,15 +16,15 @@ trait WithDefaultImplementation[Result <: Coproduct] {
     lazy val defaultImplementation = default
   }
 
-  private object ResultRunner extends ((Return :+: Result)#Instance ~> ResultProgram) {
+  private[this] object ResultRunner extends ((Return :+: Result)#Instance ~> ResultProgram) {
     def transform[x] = Program.lift
   }
 
-  private object ReturnRunner extends (ReturnWithDefault ~> ResultProgram) {
+  private[this] object ReturnRunner extends (ReturnWithDefault ~> ResultProgram) {
     def transform[x] = _.defaultImplementation runWith ProgramRunner
   }
 
-  private object ProgramRunner extends (programType.Out ~> ResultProgram) {
+  private[this] object ProgramRunner extends (programType.Out ~> ResultProgram) {
     def transform[x] = _.fold(ifHead = ReturnRunner.apply, ifTail = ResultRunner.apply)
   }
 }

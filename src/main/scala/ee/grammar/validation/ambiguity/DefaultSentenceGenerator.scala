@@ -10,13 +10,13 @@ class DefaultSentenceGenerator(
   threshold: Int
 ) extends SentenceGenerator {
 
-  private val productionLookup = grammar.productions.flatMap(Production.unapply).toMap
-  private val counters         = productionLookup.mapValues(_ => new Counters)
+  private[this] val productionLookup = grammar.productions.flatMap(Production.unapply).toMap
+  private[this] val counters         = productionLookup.mapValues(_ => new Counters)
 
   def generate(nonterminal: Nonterminal):String =
     generate(nonterminal, depth = 0, path = Seq(nonterminal))
 
-  private def generate(current: Nonterminal, depth: Int, path: Path):String =
+  private[this] def generate(current: Nonterminal, depth: Int, path: Path):String =
     whileUpdatingCountersFor(current) {
       val alternative =
         if (depth >= threshold) selectScoredAlternative(current)
@@ -33,21 +33,21 @@ class DefaultSentenceGenerator(
       sentence mkString separator
     }
 
-  private def selectRandomAlternative(current: Nonterminal) = {
+  private[this] def selectRandomAlternative(current: Nonterminal) = {
     val alternatives = productionLookup(current)
     randomChoiceOf(alternatives)
   }
 
-  private def selectScoredAlternative(current:Nonterminal) = {
+  private[this] def selectScoredAlternative(current:Nonterminal) = {
     val scored = productionLookup(current) groupBy determineScore
     val (_, alternatives) = scored.minBy { case (score, _) => score }
     randomChoiceOf(alternatives)
   }
 
-  private def randomChoiceOf(alternatives:Choices[Sequence[`Nonterminal | Terminal`]]) =
+  private[this] def randomChoiceOf(alternatives:Choices[Sequence[`Nonterminal | Terminal`]]) =
     alternatives.toVector(Random nextInt alternatives.size)
 
-  private def determineScore(sequence: Sequence[`Nonterminal | Terminal`]):Double =
+  private[this] def determineScore(sequence: Sequence[`Nonterminal | Terminal`]):Double =
     sequence.foldLeft(0D) {
       case (score, n:Nonterminal) if (counters(n).entered > 0) =>
         val counter = counters(n)
@@ -55,12 +55,12 @@ class DefaultSentenceGenerator(
       case (score, _) => score
     }
 
-  private class Counters(
+  private[this] class Counters(
     var entered: Int = 0,
     var exited : Int = 0
   )
 
-  private def whileUpdatingCountersFor[T](nonterminal:Nonterminal)(code: => T):T = {
+  private[this] def whileUpdatingCountersFor[T](nonterminal:Nonterminal)(code: => T):T = {
     val counter = counters(nonterminal)
     counter.entered += 1
     val result = code
