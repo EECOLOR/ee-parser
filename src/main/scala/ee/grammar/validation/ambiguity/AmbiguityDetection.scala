@@ -5,8 +5,8 @@ package ambiguity
 
 import org.qirx.programbuilder._
 
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration.Deadline
+import scala.concurrent.duration.FiniteDuration
 import scala.util.Random
 
 object AmbiguityDetection extends WithDefaultImplementation[Static :+: Set :+: CNil] {
